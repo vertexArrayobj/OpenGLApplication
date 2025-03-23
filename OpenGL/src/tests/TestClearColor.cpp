@@ -1,6 +1,6 @@
 #include "TestClearColor.h"
 #include "../GLErrorManager.h"
-
+#include "GL/glew.h"
 namespace test
 {
 	test::TestClearColor::TestClearColor()
