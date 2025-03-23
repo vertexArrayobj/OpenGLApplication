@@ -49,7 +49,7 @@ int main(void)
 
 	//
 	//// Setup Platform/Renderer backends
-	ImGui_ImplGlfw_InitForOpenGL(window, true);   
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init();
 	ImGuiIO& io = ImGui::GetIO();
 
@@ -62,20 +62,8 @@ int main(void)
 
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
-
 	// Scope
 	{
-		float positions[] = {
-			200.0f, 200.0f, 0.0f, 0.0f,  // 0
-			400.0f, 200.0f, 1.0f, 0.0f,  // 1
-			400.0f,  400.0f, 1.0f, 1.0f, // 2
-			200.0f,  400.0f, 0.0f, 1.0f  // 3
-		};
-
-		unsigned int indicies[] = {
-			0, 1, 2,
-			2, 3, 0
-		};
 
 		// Blending
 		GLCall(glEnable(GL_BLEND));
@@ -83,32 +71,12 @@ int main(void)
 
 		glEnable(GL_FRAMEBUFFER_SRGB);
 
-		VertexArray va;
-		VertexBuffer vb(positions, 4 * 4 * sizeof(float));
-		VertexBufferLayout layout;
-		layout.Push<float>(2);
-		layout.Push<float>(2);
-		va.AddBuffer(vb, layout);
 
-		IndexBuffer ib(indicies, 6);
-
-		glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
-		glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-200.0, -200.0, 0.0f));
-
-		Shader shader("res/shaders/Basic.shader");
-
-		Texture texture("res/textures/logo.png");
-		texture.Bind();
-		shader.SetShaderUniform1i("u_Texture", 0);
-		
 		Renderer renderer;
 
-		float r = 0.8f;
-		glm::vec3 translationA(0, 0, 0.0f);
-		glm::vec3 translationB(200, 0, 0.0f);
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), translationA);
 
 		// TODO: Tests
+		test::TestClearColor testClearColor;
 
 
 		/* Loop until the user closes the window */
@@ -121,29 +89,12 @@ int main(void)
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 
-			model = glm::translate(glm::mat4(1.0f), translationA);
-			glm::mat4 mvp = proj * view * model;
+			testClearColor.OnRender();
 
-			shader.Bind();
-			shader.SetShaderUniform4f("u_Color", r, r, 0.01f, 1.0f);
-			shader.SetShaderUniformMat4f("u_MVP", mvp);
-
-			renderer.Draw(va, ib, shader);
-
-			model = glm::translate(glm::mat4(1.0f), translationB);
-			mvp = proj * view * model;
-			shader.SetShaderUniformMat4f("u_MVP", mvp);
-			renderer.Draw(va, ib, shader);
-
-
-			{
-				ImGui::SliderFloat("float", &r, 0.0f, 1.0f);
-				ImGui::SliderFloat3("TranslationA", &translationA.x, -200.0f, 1000.0f);
-				ImGui::SliderFloat3("TranslationB", &translationB.x, -200.0f, 1000.0f);
-				ImGui::Text("Application Framerate: %f" , io.Framerate);
-			}
 
 			// ImGui Render
+			testClearColor.OnImGuiRender();
+
 			ImGui::Render();
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -154,7 +105,6 @@ int main(void)
 			glfwPollEvents();
 		}
 
-		shader.Unbind();
 	}
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();

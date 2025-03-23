@@ -1,6 +1,7 @@
 #include "TestClearColor.h"
 #include "../GLErrorManager.h"
-#include "GL/glew.h"
+#include "imgui/imgui.h"
+
 namespace test
 {
 	test::TestClearColor::TestClearColor()
@@ -23,6 +24,7 @@ namespace test
 
 	void test::TestClearColor::OnImGuiRender()
 	{
+		ImGui::ColorEdit4("Clear Color", m_ClearColor);
 	}
 
 }
