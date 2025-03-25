@@ -1,6 +1,7 @@
 #include "TestClearColor.h"
 #include "../GLErrorManager.h"
 #include "imgui/imgui.h"
+#include <iostream>
 
 namespace test
 {
@@ -11,6 +12,8 @@ namespace test
 
 	test::TestClearColor::~TestClearColor()
 	{
+		std::cout << "Destroyed Clear Color Scene" << std::endl;
+		GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
 	}
 
 	void test::TestClearColor::OnUpdate(float deltatime)
