@@ -3,7 +3,7 @@
 
 namespace test
 {
-	TestTexture2D::TestTexture2D():
+	TestTexture2D::TestTexture2D() :
 		m_translationA(0, 0, 0.0f), m_translationB(200, 0, 0.0f),
 		m_proj(glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f)),
 		m_view(glm::translate(glm::mat4(1.0f), glm::vec3(-200.0, -200.0, 0.0f))), m_io(ImGui::GetIO())
@@ -33,23 +33,21 @@ namespace test
 		m_VAO->AddBuffer(*m_VB, *m_Layout);
 		m_Shader->SetShaderUniform1i("u_Texture", 0);
 
-		m_VAO->Bind();
-		m_Texture->Bind();
-		m_Shader->Bind();
+		
 	}
 	TestTexture2D::~TestTexture2D()
 	{
 
 	}
-	
+
 	float r_increment = 0.01f;
-	float m_r;
+	float r = 0.0f;
 	void TestTexture2D::OnUpdate(float deltatime)
 	{
-		m_r += r_increment;
-		if (m_r >= 1.0f)
+		r += r_increment;
+		if (r >= 1.0f)
 			r_increment = -(r_increment);
-		else if (m_r <= 0.0f)
+		else if (r <= 0.0f)
 			r_increment = -(r_increment);
 
 
@@ -58,8 +56,10 @@ namespace test
 	{
 		Renderer renderer;
 		Renderer::SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		m_VAO->Bind();
+		m_Texture->Bind();
 		m_Shader->Bind();
-		m_Shader->SetShaderUniform4f("u_Color", m_r, 0.0f, 0.0f, 1.0f);
+		m_Shader->SetShaderUniform4f("u_Color", r, 0.0f, 0.0f, 1.0f);
 
 		glm::mat4 model;
 		glm::mat4 mvp;
@@ -77,7 +77,7 @@ namespace test
 
 	void TestTexture2D::OnImGuiRender()
 	{
-		ImGui::SliderFloat("Red Channel", &m_r, 0.0f, 1.0f);
+		ImGui::SliderFloat("Red Channel", &r, 0.0f, 1.0f);
 		ImGui::SliderFloat3("TranslationA", &m_translationA.x, -200.0f, 1000.0f);
 		ImGui::SliderFloat3("TranslationB", &m_translationB.x, -200.0f, 1000.0f);
 		ImGui::Text("Application Framerate: %f", m_io.Framerate);
