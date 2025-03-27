@@ -18,6 +18,7 @@
 
 #include "tests/TestClearColor.h"
 #include "tests/TestMenu.h"
+#include "tests/TestTexture2D.h"
 
 int main(void)
 {
@@ -72,13 +73,12 @@ int main(void)
 
 		glEnable(GL_FRAMEBUFFER_SRGB);
 
-
 		Renderer renderer;
-
 
 		test::Test* currentTest = nullptr;
 		test::TestMenu* menu = new test::TestMenu(currentTest);
 		menu->RegisterTest<test::TestClearColor>("Clear Color");
+		menu->RegisterTest<test::TestTexture2D>("2D Texture");
 		currentTest = menu;
 
 
